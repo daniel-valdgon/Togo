@@ -13,19 +13,27 @@ if "`c(username)'"=="wb419055"	{
 	// data path 
 }
 
+/* ---- Folder paths ---------------------------------- */
+global do   "${toolA}/2_scripts/1_model_calibration" 
+
 global iso3 "TGO"
-global data "${toolA}/1_data/ehcvm_2018"
+global data "${toolA}/1_data/ehcvm_2018/raw"
 global temp "${toolA}/1_data/temp"
 
 
 
+/* ---- Ado files and programs ---------------------------------- */
+*New programs to be added in the ado_folder or installed if required several ado-files 
 
+*ado
+foreach v in winsor2 coefplot {
+	cap which `v'
+	if _rc ssc install `v'
+}
 
+/* ---- Country-specific parameters ---------------------------------- */
 
-
-/* ---- 1. Set country-specific parameters ---------------------------------- */
-
-*@kadidia if wuold be easy to have all glogals in the same do-file rather than repited across do-files
+*@kadidia it would be easy to have all glogals in the same do-file rather than repited across do-files
 *	global data "C:\Users\KADIDIA KONE\Documents\CEQ_to focus on\CCDR Togo\CCDR TOGO\data\"
 
 
@@ -35,8 +43,6 @@ global cpi 0.9970552
 
 
 
-*@why kadidia, if this folders did not exist in your original folder
-*
 *global logs "${toolA}\LOG"
 *global dat "${toolA}\DAT"
 *global data "${toolA}\data"
@@ -51,15 +57,39 @@ global data "${toolA}\data"
 
 */
 
-global do   "${toolA}/2_scripts/1_model_calibration" 
+
 
 cap log close
 log using "$temp\runall${iso3}.log", replace text 	
 
-	do "$do\01 prepare data TGO.do" 
+/*------------ 1 Compute a consumption based income --------------------
+
+  This first set of do-files use the methodology implemented by Hernani Limarino 2023 and subsequently implemented by 
+  Mohamed Coulibaly & Sidi Mohamed Sawadogo & Liz Foster in the MPO projections
+
+   Inputs: 
+	
+   Outputs: 
+   MPO_hh_TGO.dta
+   labor_ind_TGO.dta
+
+*/
+	do "$do\01-1 standardize variables EHCVM1.do" // 01-1 standardize variables: creates standard household and individual datasets, specific to survey
+	do "$do\01-1 zchecks.do" 
+	do "$do\01-2 mincer equation.do" //  01-2 mincer equation: should work for any country as long as the standard datasets can be constructed
+	
+	
+/*---------- 2 	Relabel groups ---------------
+	
+   Inputs: 
+	
+   Outputs: 
+
+*/
 	do "$do\02 Load groups.do" 
 	do "$do\03 Factor income.do"
 	
-	
+
+log close 	
 	
 	

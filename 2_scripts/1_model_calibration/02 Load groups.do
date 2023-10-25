@@ -13,7 +13,7 @@ use "$data/ehcvm_individu_tgo2018.dta", clear
 	merge 1:1 idh idi using "$temp/labor_ind_TGO.dta", keepusing(li salaried_income self_employee_income)
 	gen employee=1 if _m==3
 	drop _m
-	merge m:1 idh using "$temp/MPO_hh_TGO.dta",nogen keepusing(wgt hhsize)
+	merge m:1 idh using "$temp/MPO_hh_TGO.dta",nogen keepusing(wgt hhsize) //
 	
 	gen educ_never=1 if educ_hi==1
 	replace educ_never=0 if educ_never==.
@@ -21,7 +21,9 @@ use "$data/ehcvm_individu_tgo2018.dta", clear
 
 drop zae lien mstat religion nation mal30j aff30j agemar arrmal durarr con30j hos12m couvmal moustiq handit handig alfab scol educ_scol telpor internet activ7j activ12m sectins volhor salaire emploi_sec sectins_sec csp_sec volhor_sec salaire_sec bank serviceconsult persconsult educ_hi
 	
-	gen female = (sexe == 2)
+
+// gender 
+gen female = (sexe == 2)
 	
 	
 // Renaming variables that we will not change their value labels 
