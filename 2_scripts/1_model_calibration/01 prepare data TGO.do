@@ -13,6 +13,14 @@
  Data: EHCVM 2018/19
 ********************************************************************************/
 
+/* ---- 1. Set country-specific parameters ---------------------------------- */
+
+global iso3 "TGO"
+global data "C:\Users\KADIDIA KONE\Documents\CEQ_to focus on\CCDR Togo\CCDR TOGO\data\"
+global icp 246.59648
+global cpi 0.9970552
+
+
 /* ---- 3. Run do files ----------------------------------------------------- */
 
 cap which coefplot
