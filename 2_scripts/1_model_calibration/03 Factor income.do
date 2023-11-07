@@ -2,11 +2,11 @@
 Project:   CCDR Togo
 Author:    Kolohotia Kadidia Kone
 Creation Date:  October 2023
-Output: 
+Output: Factor income 
 ============================================================================================*/
 
 use "$temp/labor_ind_TGO.dta", clear
-merge 1:1 idh idi using "$temp/02 Load groups.dta", keep(3) nogen keepus(genderXskill skilled industry small_industry weight quanturbli quantruralli quantruralwage quanturbwage)
+merge 1:1 idh idi using "$temp/02 Load groups.dta", keep(3) nogen keepus(genderXskill skilled industry weight quanturb quantrural)
 
 *************Compute mixed income and capital land *********************
 gen wage=salaried_income
@@ -27,20 +27,21 @@ gen capital_income=capital_factor*capital_land
 gen land_income=capital_land*(1-capital_factor)
 
 egen tot_capital_land=rowtotal(capital_income land_income)
+
 ************************Factor payement********************
 
 //Define excel sheet 
-putexcel set "${toolA}\SAMshares.xlsx", sheet(factor payments) modify
+putexcel set result, sheet(factor payments) modify
 
 
 ///**** factor payment EBE+share of EBE*********
 
-///by skills
+///group by skills and industries
 
 preserve 
 
-collapse (sum) total_lab [iw=weight], by(skilled small_industry)
-reshape wide total_lab , i(skilled) j(small_industry)
+collapse (sum) total_lab [iw=weight], by(skilled industry)
+reshape wide total_lab , i(skilled) j(industry)
 
 //write in the excel sheetsheet
 
@@ -51,11 +52,12 @@ putexcel C19 = matrix(A)
 restore
 
 
-/// by genderXskill
+/// group by genderXskill and industries
+
 preserve 
 
-collapse (sum) total_lab [iw=weight], by(genderXskill small_industry)
-reshape wide total_lab , i(genderXskill) j(small_industry)
+collapse (sum) total_lab [iw=weight], by(genderXskill industry)
+reshape wide total_lab , i(genderXskill) j(industry)
 
 //write in the excel sheetsheet
 
@@ -65,9 +67,9 @@ putexcel C32 = matrix(A)
 
 restore
 
-///**** factor payment capital (rest of EBE)
+*//**** factor payment capital (rest of EBE)
 
-///Complete
+/*//Complete
 preserve 
 
 collapse (sum) capital_income land_income [iw=weight], by(small_industry)
@@ -81,43 +83,43 @@ putexcel C26 = matrix(A')
 restore
 
 
-/// by genderXskill
+*////by genderXskill
 
 ***********************Factor income***********************
 
 //Define excel sheet 
-putexcel set "${toolA}\SAMshares.xlsx", sheet(factor inc) modify
+putexcel set result, sheet(factor inc) modify
 
 
 ///**** Rural quant*********
 
-//Generate factor income by quantruralwage and Skills
+//Generate factor income by rural quintils and Skills
 
 preserve 
 
-collapse (sum) wage [iw=weight], by(skilled quantruralwage)
-reshape wide wage , i(quantruralwage) j(skilled)
-drop if quantruralwage==.
+collapse (sum) wage [iw=weight], by(skilled quantrural)
+reshape wide wage , i(quantrural) j(skilled)
+drop if quantrural==.
 
 //write in the excel sheetsheet
 
-tabstat wage1 wage2 wage3, by(quantruralwage) save
+tabstat wage1 wage2 wage3, by(quantrural) save
 qui tabstatmat A, nototal
 putexcel C6 = matrix(A)
 
 restore
 
-//Generate factor income by quantruralwage and GenderXskills
+//Generate factor income by rural quintils and GenderXskills
 
 preserve 
 
-collapse (sum) wage [iw=weight], by(genderXskill quantruralwage)
-reshape wide wage , i(quantruralwage) j(genderXskill)
-drop if quantruralwage==.
+collapse (sum) wage [iw=weight], by(genderXskill quantrural)
+reshape wide wage , i(quantrural) j(genderXskill)
+drop if quantrural==.
 
 //write in the excel sheetsheet
 
-tabstat wage*, by(quantruralwage) save
+tabstat wage*, by(quantrural) save
 qui tabstatmat A, nototal
 putexcel J6 = matrix(A)
 
@@ -126,33 +128,33 @@ restore
 
 ///**** Urban**********
 
-//Generate factor income by quanturbwage and skills
+//Generate factor income by urban quintils and skills
 
 preserve 
 
-collapse (sum) wage [iw=weight], by(skilled quanturbwage)
-reshape wide wage , i(quanturbwage) j(skilled)
-drop if quanturbwage==.
+collapse (sum) wage [iw=weight], by(skilled quanturb)
+reshape wide wage , i(quanturb) j(skilled)
+drop if quanturb==.
 
 //write in the excel sheetsheet
 
-tabstat wage1 wage2 wage3, by(quanturbwage) save
+tabstat wage1 wage2 wage3, by(quanturb) save
 qui tabstatmat A, nototal
 putexcel C11 = matrix(A)
 
 restore
 
-//Generate factor income by quanturbwage and GenderXskills
+//Generate factor income by urban quintils and GenderXskills
 
 preserve 
 
-collapse (sum) wage [iw=weight], by(genderXskill quanturbwage)
-reshape wide wage , i(quanturbwage) j(genderXskill)
-drop if quanturbwage==.
+collapse (sum) wage [iw=weight], by(genderXskill quanturb)
+reshape wide wage , i(quanturb) j(genderXskill)
+drop if quanturb==.
 
 //write in the excel sheetsheet
 
-tabstat wage*, by(quanturbwage) save
+tabstat wage*, by(quanturb) save
 qui tabstatmat A, nototal
 putexcel J11 = matrix(A)
 

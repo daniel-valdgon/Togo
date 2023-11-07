@@ -19,6 +19,7 @@ global do   "${toolA}/2_scripts/1_model_calibration"
 global iso3 "TGO"
 global data "${toolA}/1_data/ehcvm_2018/raw"
 global temp "${toolA}/1_data/temp"
+global results "${toolA}/3_results/SAMshares.xlsx"
 
 
 
@@ -57,8 +58,6 @@ global data "${toolA}\data"
 
 */
 
-
-
 cap log close
 log using "$temp\runall${iso3}.log", replace text 	
 
@@ -88,6 +87,8 @@ log using "$temp\runall${iso3}.log", replace text
 */
 	do "$do\02 Load groups.do" 
 	do "$do\03 Factor income.do"
+	do "$do\04 Transfers.do"
+	do "$do\05 Consumption.do"
 	
 
 log close 	
