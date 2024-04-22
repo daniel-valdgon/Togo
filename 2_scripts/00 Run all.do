@@ -1,7 +1,7 @@
 /*******************************************************************************
-***Run all dofiles
- Made by Kadidia Kone/konkadidia19@gmail.com
- country : Togo
+Run all dofiles
+ Made by Daniel Valderrama and Kadidia Kone
+ Country : Togo
  Data: EHCVM 2018/19
 ************************************************************************/
 
@@ -32,7 +32,6 @@ global results "${toolA}/3_results"
 
 
 /* ---- Ado files and programs ---------------------------------- */
-*New programs to be added in the ado_folder or installed if required several ado-files 
 
 *ado
 foreach v in winsor2 coefplot {
@@ -41,11 +40,6 @@ foreach v in winsor2 coefplot {
 }
 
 /* ---- Country-specific parameters ---------------------------------- */
-
-*@kadidia it would be easy to have all glogals in the same do-file rather than repited across do-files
-*	global data "C:\Users\KADIDIA KONE\Documents\CEQ_to focus on\CCDR Togo\CCDR TOGO\data\"
-
-
 
 global icp 246.59648
 global cpi 0.9970552
@@ -95,7 +89,6 @@ log using "$temp\runall${iso3}.log", replace text
 	do "$do\06 Stats.do"
 	do "$do\07 Capital.do"
 	do "$do\08 Land.do"
-
 
 /*Spatial aggregations*/
 

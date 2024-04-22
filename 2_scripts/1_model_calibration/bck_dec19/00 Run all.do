@@ -96,12 +96,6 @@ log using "$temp\runall${iso3}.log", replace text
 	do "$do\07 Capital.do"
 	do "$do\08 Land.do"
 
-
-/*Spatial aggregations*/
-
-*Consumption + income components + sectors 
-
-
 	
 
 log close 	
